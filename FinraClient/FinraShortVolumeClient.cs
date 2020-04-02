@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FinraClient
 {
-    public class FinraShortVolumeClient
+    public class FinraShortVolumeClient : IFinraShortVolumeClient
     {
         public static readonly DateTime FirstDate = new DateTime(2018, 11, 5);
         private string baseUrl;
