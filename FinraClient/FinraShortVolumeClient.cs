@@ -5,19 +5,22 @@ using System.Threading.Tasks;
 
 namespace FinraClient
 {
-    public class FinraShortVolumeClient : IFinraShortVolumeClient
+    public class FinraShortVolumeClient<T> : IFinraShortVolumeClient<T>
     {
-        public static readonly DateTime FirstDate = new DateTime(2018, 11, 5);
-        private string baseUrl;
-        private HttpClient client;
+        private readonly string baseUrl;
+        private readonly HttpClient client;
+        private readonly IFinraResponseParser<T> _responseParser;
 
-        public FinraShortVolumeClient(string baseUrl = "https://cdn.finra.org/equity/regsho/daily")
+        public FinraShortVolumeClient(
+            IFinraResponseParser<T> responseParser,
+            string baseUrl = "https://cdn.finra.org/equity/regsho/daily")
         {
             this.baseUrl = baseUrl;
             this.client = new HttpClient();
+            this._responseParser = responseParser;
         }
 
-        public async Task<List<FinraRecord>> GetShortVolume(DateTime date)
+        public async Task<List<T>> GetShortVolume(DateTime date)
         {
             // example URL: http://regsho.finra.org/CNMSshvol20181105.txt
             // Changed to https://cdn.finra.org/equity/regsho/daily/CNMSshvol20220804.txt
@@ -27,7 +30,8 @@ namespace FinraClient
             string requestUrl = $"{this.baseUrl}/{fileName}";
 
             var response = await client.GetStringAsync(requestUrl);
-            var finraResponse = FinraResponseParser.ParseResponse(response);
+
+            var finraResponse = _responseParser.ParseResponse(response);
 
             return finraResponse;
         }

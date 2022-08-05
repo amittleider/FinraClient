@@ -12,7 +12,7 @@ namespace FinraClient.Tests
         public async Task Should_Respond_OnValidRequest()
         {
             DateTime date = new DateTime(2018, 11, 5);
-            FinraShortVolumeClient finraClient = new FinraShortVolumeClient();
+            IFinraShortVolumeClient<FinraRecord> finraClient = new FinraShortVolumeClient<FinraRecord>(new FinraRecordResponseParser());
             var response = await finraClient.GetShortVolume(date);
 
             response.Should().NotBeNull();

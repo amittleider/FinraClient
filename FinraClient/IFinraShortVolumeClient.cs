@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace FinraClient
 {
-    public interface IFinraShortVolumeClient
+    public interface IFinraShortVolumeClient<T>
     {
-        Task<List<FinraRecord>> GetShortVolume(DateTime date);
+        Task<List<T>> GetShortVolume(DateTime date);
     }
 }

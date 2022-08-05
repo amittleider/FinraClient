@@ -2,33 +2,32 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using TinyCsvParser;
 using TinyCsvParser.Mapping;
 using TinyCsvParser.TypeConverter;
 
 namespace FinraClient
 {
-    public class FinraResponseParser
+    public class FinraRecordResponseParser : IFinraResponseParser<FinraRecord>
     {
-        public static int count = 0;
-        public static List<FinraRecord> ParseResponse(string finraResponse)
+        public List<FinraRecord> ParseResponse(string finraResponse)
         {
             CsvParserOptions csvParserOptions = new CsvParserOptions(true, '|');
-            CsvPersonMapping mapping = new CsvPersonMapping();
+            CsvFieldMapping mapping = new CsvFieldMapping();
             CsvParser<FinraRecord> csvParser = new CsvParser<FinraRecord>(csvParserOptions, mapping);
 
             CsvReaderOptions csvReaderOptions = new CsvReaderOptions(new string[] { "\r\n" });
             var result = csvParser.ReadFromFinraString(csvReaderOptions, finraResponse, 2);
-            
+
             var a = result.ToList();
             return result.Select(r => r.Result).ToList();
         }
 
-        private class CsvPersonMapping : CsvMapping<FinraRecord>
+        private class CsvFieldMapping : CsvMapping<FinraRecord>
         {
             private static readonly DtConverter dtConverter = new DtConverter();
-            public CsvPersonMapping()
+
+            public CsvFieldMapping()
                 : base()
             {
                 MapProperty(0, x => x.Date, dtConverter);
@@ -49,7 +48,6 @@ namespace FinraClient
             public bool TryConvert(string value, out DateTime result)
             {
                 result = DateTime.ParseExact(value, validFormat, cultureInfo);
-                FinraResponseParser.count++;
                 return true;
             }
         }

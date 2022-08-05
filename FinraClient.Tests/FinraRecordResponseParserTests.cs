@@ -1,13 +1,11 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace FinraClient.Tests
 {
-    public class FinraResponseParserTests
+    public class FinraRecordResponseParserTests
     {
         [Fact]
         public void Should_ParseSampleResponse()
@@ -16,7 +14,8 @@ namespace FinraClient.Tests
             {
                 string responseString = reader.ReadToEnd();
 
-                var finraRecords = FinraResponseParser.ParseResponse(responseString);
+                FinraRecordResponseParser parser = new FinraRecordResponseParser();
+                var finraRecords = parser.ParseResponse(responseString);
 
                 finraRecords[0].Date.Should().Be(new DateTime(2018, 11, 5));
                 finraRecords[0].Market.Should().Be("Q,N");
