@@ -11,7 +11,7 @@ namespace FinraClient
         private string baseUrl;
         private HttpClient client;
 
-        public FinraShortVolumeClient(string baseUrl = "http://regsho.finra.org")
+        public FinraShortVolumeClient(string baseUrl = "https://cdn.finra.org/equity/regsho/daily")
         {
             this.baseUrl = baseUrl;
             this.client = new HttpClient();
@@ -20,6 +20,8 @@ namespace FinraClient
         public async Task<List<FinraRecord>> GetShortVolume(DateTime date)
         {
             // example URL: http://regsho.finra.org/CNMSshvol20181105.txt
+            // Changed to https://cdn.finra.org/equity/regsho/daily/CNMSshvol20220804.txt
+
             string dateString = date.ToString("yyyyMMdd");
             string fileName = $"CNMSshvol{dateString}.txt";
             string requestUrl = $"{this.baseUrl}/{fileName}";
